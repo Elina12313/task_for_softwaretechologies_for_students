@@ -11,6 +11,19 @@ public final class ArrayFunctions {
      */
     public static void reverse(int[] array) {
         // TODO: реализуйте вышеуказанную функцию
+        if (array == null ){
+            return;
+        }
+        int left = 0;
+        int right = array.length - 1;
+        while (left < right){
+            int temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+            left++;
+            right--;
+
+        }
     }
 
     /**

@@ -27,8 +27,21 @@ public class Money {
     @Override
     public boolean equals(Object o) {
         // TODO: реализуйте вышеуказанную функцию
+        if (o == this) {
+            return  true;
+        }
+        if (o == null || getClass()!=o.getClass()){
+            return false;
+        }
+        Money money = (Money) o;
+        if (type != money.type){
+            return false;
+        }
+        BigDecimal scaledAmount = amount.setScale(4, RoundingMode.HALF_UP);
+        BigDecimal otherScaledAmount = money.amount.setScale(4, RoundingMode.HALF_UP);
 
-        return false;
+        return scaledAmount.equals(otherScaledAmount);
+
     }
 
     /**
@@ -49,10 +62,41 @@ public class Money {
     @Override
     public int hashCode() {
         // TODO: реализуйте вышеуказанную функцию
+        BigDecimal scaledAmount;
+        if (amount == null){
+            scaledAmount = BigDecimal.valueOf(10000);
+        }
+        else {
+            scaledAmount = amount.setScale(4 , RoundingMode.HALF_UP);
+        }
 
+        int scaledAmountHash =scaledAmount.multiply(BigDecimal.valueOf(10000)).intValue();
 
-        Random random = new Random();
-        return random.nextInt();
+        int a = 0;
+        if (type == MoneyType.USD){
+            a = 1;
+        }
+        else if (type == MoneyType.EURO){
+            a = 2;
+        } else if (type == MoneyType.RUB) {
+            a = 3;
+        } else if (type == MoneyType.KRONA) {
+            a = 4;
+        } else {
+            a = 5;
+        }
+
+        int hash = scaledAmountHash + a;
+
+if (scaledAmountHash >= MAX_VALUE -5 ) {
+    return  MAX_VALUE -5;
+}
+else {
+    return hash;
+}
+
+//        Random random = new Random();
+//        return random.nextInt();
     }
 
     /**

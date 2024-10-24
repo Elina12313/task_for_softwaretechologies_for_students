@@ -68,6 +68,8 @@ public class Money {
     @Override
     public int hashCode() {
         // TODO: реализуйте вышеуказанную функцию
+//        Random random = new Random();
+//        return random.nextInt();
 
         BigDecimal scaledAmount = (amount == null ) ? BigDecimal.valueOf(10000) : amount.setScale(4 , RoundingMode.HALF_UP);
 
@@ -106,11 +108,6 @@ public class Money {
         else {
             return hash;
         }
-
-
-
-//        Random random = new Random();
-//        return random.nextInt();
     }
 
     /**

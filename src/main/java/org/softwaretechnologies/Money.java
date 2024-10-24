@@ -27,18 +27,24 @@ public class Money {
     @Override
     public boolean equals(Object o) {
         // TODO: реализуйте вышеуказанную функцию
-        if (o == this) {
+        if (this == o ) { // Проверяем, ссылаются ли оба объекта на один и тот же экземпляр
             return  true;
         }
+        //если объек null или классы не совпали
         if (o == null || getClass()!=o.getClass()){
             return false;
         }
-        Money money = (Money) o;
+
+        Money money = (Money) o; // приводим в тиму money
+
+        //сравнение типы валют
         if (type != money.type){
             return false;
         }
-        BigDecimal scaledAmount = amount.setScale(4, RoundingMode.HALF_UP);
-        BigDecimal otherScaledAmount = money.amount.setScale(4, RoundingMode.HALF_UP);
+
+        BigDecimal scaledAmount = (amount!= null )? amount.setScale(4, RoundingMode.HALF_UP) : BigDecimal.ZERO;
+        BigDecimal otherScaledAmount = (money.amount != null) ?  money.amount.setScale(4, RoundingMode.HALF_UP): BigDecimal.ZERO;
+
 
         return scaledAmount.equals(otherScaledAmount);
 
@@ -62,38 +68,46 @@ public class Money {
     @Override
     public int hashCode() {
         // TODO: реализуйте вышеуказанную функцию
-        BigDecimal scaledAmount;
-        if (amount == null){
-            scaledAmount = BigDecimal.valueOf(10000);
-        }
-        else {
-            scaledAmount = amount.setScale(4 , RoundingMode.HALF_UP);
-        }
 
-        int scaledAmountHash =scaledAmount.multiply(BigDecimal.valueOf(10000)).intValue();
+        BigDecimal scaledAmount = (amount == null ) ? BigDecimal.valueOf(10000) : amount.setScale(4 , RoundingMode.HALF_UP);
 
-        int a = 0;
+        //если сумма = null, то задаём сумму как 10000 иначе округляем до 4-х знаков
+//        if (amount == null){
+//            scaledAmount = BigDecimal.valueOf(10000);
+//        }
+//        else {
+//            scaledAmount = amount.setScale(4 , RoundingMode.HALF_UP);
+//        }
+//умножаем округленную сумму на 10000 и преобразуем к инт
+
+        int scaledAmountHash = scaledAmount.multiply(BigDecimal.valueOf(10000)).intValue();
+
+// определение хеш-кода для типа валют
+        int typeHash;
+
         if (type == MoneyType.USD){
-            a = 1;
+            typeHash = 1;
         }
         else if (type == MoneyType.EURO){
-            a = 2;
+            typeHash = 2;
         } else if (type == MoneyType.RUB) {
-            a = 3;
+            typeHash = 3;
         } else if (type == MoneyType.KRONA) {
-            a = 4;
+            typeHash = 4;
         } else {
-            a = 5;
+            typeHash = 5;
         }
 
-        int hash = scaledAmountHash + a;
+        int hash = scaledAmountHash + typeHash;
 
-if (scaledAmountHash >= MAX_VALUE -5 ) {
-    return  MAX_VALUE -5;
-}
-else {
-    return hash;
-}
+        if (hash >= MAX_VALUE -5){
+            return MAX_VALUE ;
+        }
+        else {
+            return hash;
+        }
+
+
 
 //        Random random = new Random();
 //        return random.nextInt();
@@ -119,8 +133,25 @@ else {
     @Override
     public String toString() {
         // TODO: реализуйте вышеуказанную функцию
-        String str = type.toString()+": "+amount.setScale(4, RoundingMode.HALF_UP).toString();
-        return str;
+        String amountStr;
+        if (amount == null){
+            amountStr = null;
+        }
+        else {
+            amountStr = amount.setScale(4, RoundingMode.HALF_UP).toString();
+        }
+
+        String typeStr;
+        if (type == null){
+            typeStr = null;
+        }
+        else{
+            typeStr =type.toString();
+        }
+        return typeStr +": " + amountStr;
+
+//        String str = type.toString()+": "+amount.setScale(4, RoundingMode.HALF_UP).toString();
+//        return str;
     }
 
     public BigDecimal getAmount() {
